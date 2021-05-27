@@ -1,6 +1,10 @@
-const { ipcRenderer } = require("electron");
+const {
+  ipcRenderer
+} = require("electron");
 
-import { spline } from "https://cdn.skypack.dev/@georgedoescode/spline@1.0.1";
+import {
+  spline
+} from "https://cdn.skypack.dev/@georgedoescode/spline@1.0.1";
 import SimplexNoise from "https://cdn.skypack.dev/simplex-noise@2.4.0";
 
 const $ = require("jquery");
@@ -10,13 +14,25 @@ const path = document.querySelector("path");
 // used to set our custom property values
 const root = document.documentElement;
 var noiseStep = 0.007;
-const center = {x: 100,y: 100};
+const center = {
+  x: 100,
+  y: 100
+};
 // var point;
 // var rad = 30;
 var radiuses = new Array(5).fill(30);
 var smoothRadius = [...radiuses]; // spread operator
 // used to equally space each point around the circle
 var angleStep = (Math.PI * 2) / radiuses.length;
+
+const DATA = {
+  happiness: ["smile", "dance", "sing"],
+  fear: ["scared"],
+  anger: ["death", "kill", "cry", "dead"],
+  love: ["kiss", "bisou", "smack"],
+  sadness: ["tears", "cry"],
+}
+
 //const robot = require("robotSjs");
 class App {
   constructor() {
@@ -51,8 +67,7 @@ class App {
         .last()
         .css({
           top: (y * window.innerHeight) / 200,
-          left:
-            (x * window.innerHeight) / 200 +
+          left: (x * window.innerHeight) / 200 +
             (window.innerWidth - window.innerHeight) / 2,
           position: "absolute",
         });
@@ -150,6 +165,28 @@ class App {
     // ipcRenderer.on("messageEmbedDiscord", this.onMessageEmbed.bind(this));
   }
 
+
+
+
+
+
+
+  analyseMessage(msg) {
+    console.log(msg);
+    const results = Object.entries(DATA).map(([emotion, words]) => {
+      let score = words.reduce((count, word) => {
+        if (msg.includes(word)) count++;
+        return count;
+      }, 0);
+
+
+      return [emotion, score]
+    });
+
+    const scores = Object.fromEntries(results);
+
+    return scores;
+  }
   onMessage(event, message) {
     const fearJson = "./JS/Dictionnary/fear.json";
     const fear = require(fearJson);
@@ -166,53 +203,66 @@ class App {
     const happyJson = "./JS/Dictionnary/happy.json";
     const happy = require(happyJson);
 
-    const emotions = [happy, fear, anger, love, sad];
-    console.log(emotions);
+    //const emotions = [happy, fear, anger, love, sad];
 
     console.log(message);
+    let analysedMessage = this.analyseMessage(message.content);
+
+    console.log(analysedMessage);
+    let analysedMessageIndexes = Object.values(analysedMessage);
+    let emotions = Object.keys(analysedMessage);
+    console.log(emotions.length);
+
+    for (var key in emotions) {
+      console.log(key + ' is ' + emotions[key]);
+      console.log(analysedMessage);
+
+    }
+
 
     for (let i = 0; i < emotions.length; i++) {
-      var words = message.content.split(" ");
-      // console.log(words);
 
-      if (emotions[i].hasOwnProperty(message.content)) {
-        const increment = emotions[i][message.content];
-        radiuses[i] += increment;
+      if (analysedMessageIndexes[i] > 0) {
 
-        const emotionIndex = i;
+        const increment = 20;
+       
+
+        setTimeout(function () {
+          radiuses[i] += increment;
+        }, 0+i*200);
+
+        console.log(radiuses[i]);
+        console.log(increment);
+
         // i = 0 -> fear // i = 1 -> anger // i = 2 -> love...
         $(".stats").append(
           '<div class="singleStat">			<div class="statTitle">				<div class="emotionStat">					<span class="material-icons">						north_east					</span>					<div class="emotionName">anger</div>				</div>				<div class="userName">matthater</div>				<div class="messageTime">22:03</div>			</div>			<div class="statContent">				<div class="statMessage">					I wanna punch someone because I had a shitty day				</div>			</div>		</div>'
         );
-        var emotionText;
-        if (emotionIndex == 1) {
-          emotionText = "fear";
-        }
-        if (emotionIndex == 2) {
-          emotionText = "anger";
-        }
-        if (emotionIndex == 3) {
-          emotionText = "love";
-        }
-        if (emotionIndex == 4) {
-          emotionText = "sad";
-        }
-        if (emotionIndex == 0) {
-          emotionText = "happy";
-        }
-        console.log(emotionText + " " + emotionIndex);
-
+        var emotionText = emotions[i];
         const d = new Date(message.timestamp);
-        var singleStat = $(".singleStat").last();
-        var date = d.getHours() + ":" + d.getMinutes();
+        var date = ((d.getHours()<10?'0':'') + d.getHours()) + ":" + ((d.getMinutes()<10?'0':'') + d.getMinutes());
         $(".messageTime").last().text(date);
-
         $(".userName").last().text(message.author);
         $(".statMessage").last().text(message.content);
         $(".emotionName").last().text(emotionText);
-
         var statsDiv = $(".stats").last();
-        statsDiv.animate({ scrollTop: statsDiv[0].scrollHeight }, 1000);
+        statsDiv.animate({
+          scrollTop: statsDiv[0].scrollHeight
+        }, 1000);
+
+      }
+    }
+
+    for (let i = 0; i < emotions.length; i++) {
+      //si love has property kiss
+
+      if (emotions[i].hasOwnProperty(message.content)) {
+
+        // const increment = emotions[i][message.content];
+        // radiuses[i] += increment;
+
+
+
       }
     }
   }
@@ -264,7 +314,9 @@ window.onload = () => {
 $(document).on("mouseenter", ".statTitle", function () {
   $(this).next().toggleClass("appearMsg");
   var statsDiv = $(".stats").last();
-  statsDiv.animate({ scrollTop: statsDiv[0].scrollHeight }, 1000);
+  statsDiv.animate({
+    scrollTop: statsDiv[0].scrollHeight
+  }, 1000);
 });
 
 $(document).on("mouseleave", ".statTitle", function () {
