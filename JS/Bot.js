@@ -5,33 +5,58 @@ const {
 const {
   Board,
   Led,
-  Servo
+  Servo,
+  Button
 } = require("johnny-five");
 
+const DATA = ["smile", "dance", "sing","scared","death", "kill", "cry", "dead","kiss", "bisou", "smack","tears", "cry"];
+
 class Bot {
-  constructor(token, win, led, led2) {
+  constructor(token, win) {
     console.log("Bot start");
 
     this.win = win;
     this.client = new Client();
     this.client.on("ready", this.onReady.bind(this));
     this.client.on("message", this.onMessage.bind(this));
+    this.board;
+   
+
+    this.enabled = false;
+    this.pump1;
+    this.pump2;
+
     this.client.login(token);
     this.users = [];
 
-    //this.initArduino();
-    this.led = led;
-    this.led2 = led2;
+    this.initArduino();
+
+
   }
 
-  /* initArduino() {
-    this.board = new Board({ repl: false });
+  initArduino() {
+    this.board = new Board({
+      port: "COM6",
+      repl: false,
+    });
     this.board.on("ready", this.onBoardReady.bind(this));
     console.log("BOARD STARTED");
-  } */
+  }
+
   onBoardReady() {
     console.log("Board ready");
+    this.pump1 = new Led(9);
+    this.pump2 = new Led(10);
+    //this.pump1.off();
+    //this.pump2.off();
+    
 
+
+    
+  }
+
+  onButtonDown() {
+    console.log("button down");
   }
 
 
@@ -40,18 +65,27 @@ class Bot {
   }
 
   onMessage(message) {
-    //   const receivedEmbed = message.embeds[0];
-    //   //console.log(message.content);
+    var wordCounter = 0;
+    const words = message.content.split(" ");
+    for(let i = 0; i < words.length; i++){
+      for (var j = 0; j < DATA.length; j++) {
+        if (words[i].includes(DATA[j])) {
+          wordCounter ++;
+          this.pump1.on();
+          var that = this;
+          
+        }
+      }
+    }
 
-    //   if (receivedEmbed) {
-    //     this.win.webContents.send("messageDiscord", receivedEmbed);
-    //     console.log(receivedEmbed);
-    //   } else {
-    //     this.win.webContents.send("messageDiscord", message.content);
-    //   }
+    setTimeout(function(){
+      that.pump1.off();
+    }, wordCounter * 2000);
     
+  
+   
+
     var timestamp = message.createdTimestamp;
-    
 
     var messageInfos = {
       content: message.content,
@@ -64,6 +98,12 @@ class Bot {
 
 
   }
+}
+
+async function delay(millis = 0) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, millis);
+  });
 }
 
 module.exports = {

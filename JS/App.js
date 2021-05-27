@@ -8,7 +8,6 @@ import {
 import SimplexNoise from "https://cdn.skypack.dev/simplex-noise@2.4.0";
 
 const $ = require("jquery");
-
 // our <path> element
 const path = document.querySelector("path");
 // used to set our custom property values
@@ -33,6 +32,7 @@ const DATA = {
   sadness: ["tears", "cry"],
 }
 
+
 //const robot = require("robotSjs");
 class App {
   constructor() {
@@ -41,7 +41,6 @@ class App {
     this.points = [];
     // this.noiseStep = 0.005;
     this.hueNoiseOffset = 0;
-
     this.initBlob();
     this.initListeners();
     this.initLoop();
@@ -226,7 +225,7 @@ class App {
 
         const increment = 20;
        
-
+       
         setTimeout(function () {
           radiuses[i] += increment;
         }, 0+i*200);
