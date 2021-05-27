@@ -1,6 +1,6 @@
 const DATA = {
-  kiss: ["kiss", "bisou", "smack"],
-  kill: ["death", "kill", "cry", "dead"],
+  love: ["kiss", "bisou", "smack"],
+  anger: ["death", "kill", "cry", "dead"],
 }
 
 const message = "I want you to be dead";
