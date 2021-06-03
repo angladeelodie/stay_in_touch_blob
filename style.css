@@ -139,7 +139,7 @@ textarea, input { outline: none; }
 .stats{
   padding-left:0.5vw;
   z-index: 100;
-  width:20vw;
+  width:30vw;
   position: absolute;
   top:10vh;
   left:0;

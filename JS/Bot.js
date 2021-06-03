@@ -10,6 +10,15 @@ const {
 } = require("johnny-five");
 
 const DATA = ["smile", "dance", "sing","scared","death", "kill", "cry", "dead","kiss", "bisou", "smack","tears", "cry"];
+const DATA2 = {
+  happiness: ["😛","🤪","🤗","🥳","🤩","😜","😌","😉","🙂","😊","😆","😁","😄","😃","😀","smile", "dance", "sing", "glad","cheerful","joyful","pleased","content","sunny","upbeat","joy","happy","happiness","euphoric","excited","festive","party","good",],
+  fear: ["😥","😧","😦","😵","🤐","😳","😨","🥶","scared","afraid","panic","doubt","scare","fright","phobia","shy","shiver","scary","frightening","terror","anxiety","anxious","creep","terrified","intimidated","","","","","",],
+  anger: ["😡","🤬","😠","🤯","🥵","😤","🙄","rage", "angry", "kill", "fury","provocation","bitter","roar","furious","provoke","flame","madness","shit","irriating","annoying","anger","furor","hell","mad","pissed","tantrum","violent","blood","clench"],
+  love: ["💗","😍","🥰","😘","👩‍❤️‍👨","👩‍❤️‍👩","👨‍❤️‍👨","👩‍❤️‍💋‍👨","👩‍❤️‍💋‍👩","👨‍❤️‍💋‍👨","😻","❤️","🧡","💛","💚","💙","💜","❣️","💕","💞","💓","💗","💖","💘","💝","🖤","🤍","🤎","💟","🌹","🥀","🌷","kiss", "love", "smack", "flowers","romance", "rose", "wedding","cute","hug","appreciate","lust","crush","sweet","lover","romantic","dear","match","fling","passion","passionate","loved","in love",],
+  sadness: ["😭","😢","😕","😔","😞","😒","😟","😖","😣","☹️","🙁","🥺","🥴","🤕","🤧","💔","tears", "cry", "unhappy","melancholy","sad","sadness","depressed","tragic","pain","miss","heartbroken","tearful","remorse","crying","breakdonw","depression","grief","mourn","regret","heartache","darkness","distress","scar","hurt","moody","remorse",],
+}
+
+
 
 class Bot {
   constructor(token, win) {
@@ -36,7 +45,7 @@ class Bot {
 
   initArduino() {
     this.board = new Board({
-      port: "COM6",
+      port: "COM5",
       repl: false,
     });
     this.board.on("ready", this.onBoardReady.bind(this));
@@ -65,25 +74,93 @@ class Bot {
   }
 
   onMessage(message) {
+    
     var wordCounter = 0;
     const words = message.content.split(" ");
     for(let i = 0; i < words.length; i++){
-      for (var j = 0; j < DATA.length; j++) {
-        if (words[i].includes(DATA[j])) {
+      for (var j = 0; j < Object.keys(DATA2).length; j++) {
+        //console.log(Object.values(DATA2)[j]);
+        //console.log(words[i]);
+          if (Object.values(DATA2)[j].includes(words[i])) {
+
+          console.log("word is in emotion index " + j )
           wordCounter ++;
-          this.pump1.on();
+           
+            if(j == 0){
+              //happiness
+              console.log("happy")
+              //this.pump1.on();
+              setInterval(() => {
+                this.pump1.toggle();
+              }, 1500);
+            }
+
+            else if(j == 1){
+              //happiness
+             
+              setInterval(() => {
+                this.pump1.on();
+              }, 200);
+              setInterval(() => {
+                this.pump1.off();
+              }, 800);
+              console.log("fear")
+            }
+
+            else if(j == 2){
+              setInterval(() => {
+                this.pump1.toggle();
+              }, 300);
+              console.log("angry")
+            }
+
+            else if(j == 3){
+              //love
+              console.log("in love")
+            }
+            else if(j == 4){
+              //sad
+              console.log("sad")
+            }
+
+
           var that = this;
-          
+          setTimeout(function(){
+            that.pump1.off();
+            that.pump2.off();
+          }, wordCounter * 3000);
         }
       }
     }
 
-    setTimeout(function(){
-      that.pump1.off();
-    }, wordCounter * 2000);
-    
-  
+    // var wordCounter = 0;
+    // const words = message.content.split(" ");
+    // for(let i = 0; i < words.length; i++){
+    //   for (var j = 0; j < DATA.length; j++) {
+    //     if (words[i].includes(DATA[j])) {
+    //       wordCounter ++;
+    //       this.pump1.on();
+    //       var that = this;
+
+
+    //       setTimeout(function(){
+    //         that.pump1.off();
+    //         that.pump2.off();
+    //       }, wordCounter * 3000);
+    //     }
+    //   }
+    // }
+
+    if(message.content == "unblow"){
+      wordCounter ++;
+      this.pump2.on();
+      var that = this;
+    }
+
    
+    
+    
+
 
     var timestamp = message.createdTimestamp;
 

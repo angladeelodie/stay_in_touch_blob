@@ -25,11 +25,12 @@ var smoothRadius = [...radiuses]; // spread operator
 var angleStep = (Math.PI * 2) / radiuses.length;
 
 const DATA = {
-  happiness: ["smile", "dance", "sing"],
-  fear: ["scared"],
-  anger: ["death", "kill", "cry", "dead"],
-  love: ["kiss", "bisou", "smack"],
-  sadness: ["tears", "cry"],
+  happiness: ["😛","🤪","🤗","🥳","🤩","😜","😌","😉","🙂","😊","😆","😁","😄","😃","😀","smile", "dance", "sing", "glad","cheerful","joyful","pleased","content","sunny","upbeat","joy","happy","happiness","euphoric","excited","festive","party","good",],
+  fear: ["😥","😧","😦","😵","🤐","😳","😨","🥶","fear","scared","afraid","panic","doubt","scare","fright","phobia","shy","shiver","scary","frightening","terror","anxiety","anxious","creep","terrified","intimidated"],
+  anger: ["😡","🤬","😠","🤯","🥵","😤","🙄","hate","rage", "angry", "kill", "fury","provocation","bitter","roar","furious","provoke","flame","madness","shit","irriating","annoying","anger","furor","hell","mad","pissed","tantrum","violent","blood","clench"],
+  love: ["💗","😍","🥰","😘","👩‍❤️‍👨","👩‍❤️‍👩","👨‍❤️‍👨","👩‍❤️‍💋‍👨","👩‍❤️‍💋‍👩","👨‍❤️‍💋‍👨","😻","❤️","🧡","💛","💚","💙","💜","❣️","💕","💞","💓","💗","💖","💘","💝","🖤","🤍","🤎","💟","🌹","🥀","🌷","kiss", "love", "smack", "flowers","romance", "rose", "wedding","cute","hug","appreciate","lust","crush","sweet","lover","romantic","dear","match","fling","passion","passionate","loved","in love",],
+  sadness: ["😭","😢","😕","😔","😞","😒","😟","😖","😣","☹️","🙁","🥺","🥴","🤕","🤧","💔","tears", "cry", "unhappy","melancholy","sad","sadness","depressed","tragic","pain","miss","heartbroken","tearful","remorse","crying","breakdonw","depression","grief","mourn","regret","heartache","darkness","distress","scar","hurt","moody","remorse",],
+
 }
 
 
@@ -61,18 +62,7 @@ class App {
       var x = center.x + Math.cos(theta) * (rad + radOffset);
       var y = center.y + Math.sin(theta) * (rad + radOffset);
 
-      $(".emotionsDiv").append('<div class="pointDiv invisible"></div>');
-      $(".pointDiv")
-        .last()
-        .css({
-          top: (y * window.innerHeight) / 200,
-          left: (x * window.innerHeight) / 200 +
-            (window.innerWidth - window.innerHeight) / 2,
-          position: "absolute",
-        });
-      $(".pointDiv").last().append('<div class="emotionTag">EMOTION</div>');
-      $(".pointDiv").last().attr("index", i);
-      $(".pointDiv").last().append('<div class="dot"></div>');
+      this.addLabels(x,y,i);
 
       x = center.x + Math.cos(theta) * rad;
       y = center.y + Math.sin(theta) * rad;
@@ -104,8 +94,22 @@ class App {
     return this.points;
   }
 
+  addLabels(x, y, i){
+    $(".emotionsDiv").append('<div class="pointDiv invisible"></div>');
+    $(".pointDiv")
+      .last()
+      .css({
+        top: (y * window.innerHeight) / 200,
+        left: (x * window.innerHeight) / 200 +
+          (window.innerWidth - window.innerHeight) / 2,
+        position: "absolute",
+      });
+    $(".pointDiv").last().append('<div class="emotionTag">EMOTION</div>');
+    $(".pointDiv").last().attr("index", i);
+    $(".pointDiv").last().append('<div class="dot"></div>');
+  }
+  
   updatePoints() {
-
     this.points.forEach((point, i) => {
 
       smoothRadius[i] = lerp(smoothRadius[i], radiuses[i], 0.1);
@@ -126,7 +130,6 @@ class App {
   }
 
   animate() {
-
     path.setAttribute("d", spline(this.points, 1, true));
 
     this.updatePoints();
@@ -158,6 +161,36 @@ class App {
     requestAnimationFrame(() => this.animate());
   }
 
+  deflateBlob(){
+
+    var indexVariable = 0;
+    
+
+    for(let i=0; i<radiuses.length; i++){
+      var targetRadius = 30;
+      setInterval(function () {
+        if(radiuses[i] > targetRadius){
+          radiuses[i] = radiuses[i]-0.02;
+        }
+    }, 30);
+    }
+
+
+    this.points.forEach((point, i) => {
+
+      smoothRadius[i] = lerp(smoothRadius[i], radiuses[i], 0.1);
+
+      const radius = smoothRadius[i];
+      const theta = i * angleStep;
+
+      var x = center.x + Math.cos(theta) * radius;
+      var y = center.y + Math.sin(theta) * radius;
+
+      point.originX = x;
+      point.originY = y;
+    });
+  }
+
   initListeners() {
     ipcRenderer.on("messageDiscord", this.onMessage.bind(this));
     //ipcRenderer.on("click", this.onClick.bind(this));
@@ -187,22 +220,8 @@ class App {
     return scores;
   }
   onMessage(event, message) {
-    const fearJson = "./JS/Dictionnary/fear.json";
-    const fear = require(fearJson);
-
-    const angerJson = "./JS/Dictionnary/anger.json";
-    const anger = require(angerJson);
-
-    const loveJson = "./JS/Dictionnary/love.json";
-    const love = require(loveJson);
-
-    const sadJson = "./JS/Dictionnary/sad.json";
-    const sad = require(sadJson);
-
-    const happyJson = "./JS/Dictionnary/happy.json";
-    const happy = require(happyJson);
-
-    //const emotions = [happy, fear, anger, love, sad];
+    this.deflateBlob();
+   
 
     console.log(message);
     let analysedMessage = this.analyseMessage(message.content);
@@ -212,18 +231,12 @@ class App {
     let emotions = Object.keys(analysedMessage);
     console.log(emotions.length);
 
-    for (var key in emotions) {
-      console.log(key + ' is ' + emotions[key]);
-      console.log(analysedMessage);
-
-    }
 
 
     for (let i = 0; i < emotions.length; i++) {
-
       if (analysedMessageIndexes[i] > 0) {
 
-        const increment = 20;
+        const increment = 10;
        
        
         setTimeout(function () {
@@ -326,3 +339,8 @@ $(document).on("mouseleave", ".statTitle", function () {
 function lerp(start, stop, amt) {
   return amt * (stop - start) + start;
 }
+
+$( window ).resize(function() {
+  console.log("resize");
+  app.addLabels();
+});
