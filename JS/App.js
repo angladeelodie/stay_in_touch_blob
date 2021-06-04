@@ -150,10 +150,10 @@ class App {
     });
 
     const hueNoise = this.noise(this.hueNoiseOffset, this.hueNoiseOffset);
-    const hue = this.map(hueNoise, -1, 1, 0, 360);
+    const hue = this.map(hueNoise, -1, 1, 0, 10);
 
-    root.style.setProperty("--startColor", `hsl(${hue}, 0%, 50%)`);
-    root.style.setProperty("--stopColor", `hsl(${hue + 60}, 0%, 70%)`);
+    root.style.setProperty("--startColor", `hsl(${hue}, 12%, 75%)`);
+    root.style.setProperty("--stopColor", `hsl(${hue + 20}, 36%, 82%)`);
     //document.body.style.background = `hsl(${hue + 60}, 75%, 5%)`;
 
     this.hueNoiseOffset += noiseStep / 6;
@@ -170,7 +170,7 @@ class App {
       var targetRadius = 30;
       setInterval(function () {
         if(radiuses[i] > targetRadius){
-          radiuses[i] = radiuses[i]-0.02;
+          radiuses[i] = radiuses[i]-0.01;
         }
     }, 30);
     }
@@ -339,8 +339,3 @@ $(document).on("mouseleave", ".statTitle", function () {
 function lerp(start, stop, amt) {
   return amt * (stop - start) + start;
 }
-
-$( window ).resize(function() {
-  console.log("resize");
-  app.addLabels();
-});
