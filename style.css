@@ -144,7 +144,7 @@ textarea, input { outline: none; }
   top:10vh;
   left:0;
   transition: all 0.5s ease-in-out;
-  max-height: 20vh;
+  max-height: 30vh;
   overflow: hidden;
 }
 
@@ -176,7 +176,7 @@ textarea, input { outline: none; }
   padding-top: 0.5vh;
 }
 .singleStat{
-  
+  /* font-size: 12px; */
 }
 
 .userName{

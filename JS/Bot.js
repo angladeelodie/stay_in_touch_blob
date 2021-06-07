@@ -235,7 +235,7 @@ class Bot {
     this.client.login(token);
     this.users = [];
 
-    this.initArduino();
+    //this.initArduino();
   }
 
   initArduino() {
@@ -266,17 +266,19 @@ class Bot {
   onMessage(message) {
     var wordCounter = 0;
     const words = message.content.split(" ");
+    /*
     for (let i = 0; i < words.length; i++) {
       for (var j = 0; j < Object.keys(DATA2).length; j++) {
         //console.log(Object.values(DATA2)[j]);
         //console.log(words[i]);
+         
         if (Object.values(DATA2)[j].includes(words[i])) {
           console.log("word is in emotion index " + j);
           wordCounter++;
           var timer = 0;
           var that = this;
 
-          
+         
           if (j == 0) { 
             //happy
             that.pump1.pulse({
@@ -353,6 +355,7 @@ class Bot {
               }
             });
           }
+          
 
           var that = this;
           setTimeout(function () {
@@ -361,8 +364,15 @@ class Bot {
             that.pump2.stop().off();
           }, wordCounter * 4000);
         }
+
+           
       }
+
+       
     }
+
+     */
+   
 
     // var wordCounter = 0;
     // const words = message.content.split(" ");
@@ -380,6 +390,8 @@ class Bot {
     //     }
     //   }
     // }
+
+    /*
 
     if (message.content == "unblow" || message.content == "Unblow"  ) {
       wordCounter++;
@@ -404,7 +416,7 @@ class Bot {
       
     }
 
-    
+    */
 
     var timestamp = message.createdTimestamp;
 
