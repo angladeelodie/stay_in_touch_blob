@@ -25,11 +25,11 @@ var smoothRadius = [...radiuses]; // spread operator
 var angleStep = (Math.PI * 2) / radiuses.length;
 
 const DATA = {
-  happiness: ["😛","🤪","🤗","🥳","🤩","😜","😌","😉","🙂","😊","😆","😁","😄","😃","😀","smile", "dance", "sing", "glad","cheerful","joyful","pleased","content","sunny","upbeat","joy","happy","happiness","euphoric","excited","festive","party","good",],
-  fear: ["😥","😧","😦","😵","🤐","😳","😨","🥶","fear","scared","afraid","panic","doubt","scare","fright","phobia","shy","shiver","scary","frightening","terror","anxiety","anxious","creep","terrified","intimidated"],
-  anger: ["😡","🤬","😠","🤯","🥵","😤","🙄","hate","rage", "angry", "kill", "fury","provocation","bitter","roar","furious","provoke","flame","madness","shit","irriating","annoying","anger","furor","hell","mad","pissed","tantrum","violent","blood","clench"],
-  love: ["💗","😍","🥰","😘","👩‍❤️‍👨","👩‍❤️‍👩","👨‍❤️‍👨","👩‍❤️‍💋‍👨","👩‍❤️‍💋‍👩","👨‍❤️‍💋‍👨","😻","❤️","🧡","💛","💚","💙","💜","❣️","💕","💞","💓","💗","💖","💘","💝","🖤","🤍","🤎","💟","🌹","🥀","🌷","kiss", "love", "smack", "flowers","romance", "rose", "wedding","cute","hug","appreciate","lust","crush","sweet","lover","romantic","dear","match","fling","passion","passionate","loved","in love",],
-  sadness: ["😭","😢","😕","😔","😞","😒","😟","😖","😣","☹️","🙁","🥺","🥴","🤕","🤧","💔","tears", "cry", "unhappy","melancholy","sad","sadness","depressed","tragic","pain","miss","heartbroken","tearful","remorse","crying","breakdonw","depression","grief","mourn","regret","heartache","darkness","distress","scar","hurt","moody","remorse",],
+  happiness: ["😛","🤪","🤗","🥳","🤩","😜","😌","😉","🙂","😊","😆","😁","😄","😃","😀","smile", "Smile", "dance","Dance", "sing","Sing", "glad","Glad","cheerful","Cheerful","joyful","Joyful","pleased","Pleased","content","Content","sunny","Sunny","upbeat","Upbeat","joy","Joy","happy","Happy","happiness","Happiness","euphoric","Euphoric","excited","Excited","festive","Festive","party","Party","good","Good",],
+  fear: ["😥","😧","😦","😵","🤐","😳","😨","🥶","fear","Fear","scared","Scared","afraid","Afraid","panic","Panic","doubt","Doubt","scare","Scare","fright","Fright","phobia","Phobia","shy","Shy","shiver","Shiver","scary","Scary","frightening","Frightening","terror","Terror","anxiety","Anxiety","anxious","Creep","creep","Terrified","terrified","Intimidated","intimidated"],
+  anger: ["😡","🤬","😠","🤯","🥵","😤","🙄","hate","Hate","rage","Rage", "angry","Angry", "kill","Kill", "fury","Fury","provocation","Provocation","bitter","Bitter","roar","Roar","furious","Furious","provoke","Provoke","flame","Flame","madness","Madness","shit","Shit","irriating","Irritating","annoying","Annoying","anger","Anger","furor","Furor","hell","Hell","mad","Mad","pissed","Pissed","tantrum","Tantrum","violent","Violent","blood","Blood","clench","Clench"],
+  love: ["💗","😍","🥰","😘","👩‍❤️‍👨","👩‍❤️‍👩","👨‍❤️‍👨","👩‍❤️‍💋‍👨","👩‍❤️‍💋‍👩","👨‍❤️‍💋‍👨","😻","❤️","🧡","💛","💚","💙","💜","❣️","💕","💞","💓","💗","💖","💘","💝","🖤","🤍","🤎","💟","🌹","🥀","🌷","kiss","Kiss", "love","Love", "smack","Smack", "flowers","Flowers","romance","Romance", "rose","Rose", "wedding","Wedding","cute","Cute","hug","Hug","appreciate","Appreciate","lust","Lust","crush","Crush","sweet","Sweet","lover","Lover","romantic","Romantic","dear","Dear","match","Match","fling","Fling","passion","Passion","passionate","Passionate","loved","Loved","in love","In love",],
+  sadness: ["😭","😢","😕","😔","😞","😒","😟","😖","😣","☹️","🙁","🥺","🥴","🤕","🤧","💔","tears","Tears", "cry","Cry", "unhappy","Unhappy","melancholy","Melancholy","sad","Sad","sadness","Sadness","depressed","Depressed","tragic","Tragic","pain","Pain","miss","Miss","heartbroken","Heartbroken","tearful","Tearful","remorse","Remorse","crying","Crying","breakdonw","Breakdown","depression","Depression","grief","Grief","mourn","Mourn","regret","Regret","heartache","Heartache","darkness","Darkness","distress","Distress","scar","Scar","hurt","Hurt","moody","Moddy","remorse","Remorse",],
 
 }
 
@@ -42,6 +42,7 @@ class App {
     this.points = [];
     // this.noiseStep = 0.005;
     this.hueNoiseOffset = 0;
+    this.firstMessage = false;
     this.initBlob();
     this.initListeners();
     this.initLoop();
@@ -95,7 +96,7 @@ class App {
   }
 
   addLabels(x, y, i){
-    $(".emotionsDiv").append('<div class="pointDiv invisible"></div>');
+    $(".emotionsDiv").append('<div class="pointDiv"></div>');
     $(".pointDiv")
       .last()
       .css({
@@ -158,7 +159,7 @@ class App {
 
     this.hueNoiseOffset += noiseStep / 6;
 
-    requestAnimationFrame(() => this.animate());
+    //requestAnimationFrame(() => this.animate());
   }
 
   deflateBlob(){
@@ -221,8 +222,17 @@ class App {
   }
   onMessage(event, message) {
     this.deflateBlob();
+    if(this.firstMessage == false){
+      $('input[type="checkbox"]').prop( "checked", true );
+      $(".stats").toggleClass("invisible");
+      $(".app").toggleClass("hasMoved");
+      this.firstMessage = true;
+    }
+
+   
    
 
+    
     console.log(message);
     let analysedMessage = this.analyseMessage(message.content);
 
@@ -245,11 +255,35 @@ class App {
 
         console.log(radiuses[i]);
         console.log(increment);
-
+       
         // i = 0 -> fear // i = 1 -> anger // i = 2 -> love...
-        $(".stats").append(
-          '<div class="singleStat">			<div class="statTitle">				<div class="emotionStat">					<span class="material-icons">						north_east					</span>					<div class="emotionName">anger</div>				</div>				<div class="userName">matthater</div>				<div class="messageTime">22:03</div>			</div>			<div class="statContent">				<div class="statMessage">					I wanna punch someone because I had a shitty day				</div>			</div>		</div>'
-        );
+        if(i==0){
+          $(".stats").append(
+            '<div class="singleStat happiness">			<div class="statTitle">				<div class="emotionStat">					<span class="material-icons">						north_east					</span>					<div class="emotionName">anger</div>				</div>				<div class="userName">matthater</div>				<div class="messageTime">22:03</div>			</div>			<div class="statContent">				<div class="statMessage">					I wanna punch someone because I had a shitty day				</div>			</div>		</div>'
+          );
+        } else if (i==1){
+          $(".stats").append(
+            '<div class="singleStat fear">			<div class="statTitle">				<div class="emotionStat">					<span class="material-icons">						north_east					</span>					<div class="emotionName">anger</div>				</div>				<div class="userName">matthater</div>				<div class="messageTime">22:03</div>			</div>			<div class="statContent">				<div class="statMessage">					I wanna punch someone because I had a shitty day				</div>			</div>		</div>'
+          );
+        }
+        else if (i==2){
+          $(".stats").append(
+            '<div class="singleStat anger">			<div class="statTitle">				<div class="emotionStat">					<span class="material-icons">						north_east					</span>					<div class="emotionName">anger</div>				</div>				<div class="userName">matthater</div>				<div class="messageTime">22:03</div>			</div>			<div class="statContent">				<div class="statMessage">					I wanna punch someone because I had a shitty day				</div>			</div>		</div>'
+          );
+        }
+        else if (i==3){
+          $(".stats").append(
+            '<div class="singleStat love">			<div class="statTitle">				<div class="emotionStat">					<span class="material-icons">						north_east					</span>					<div class="emotionName">anger</div>				</div>				<div class="userName">matthater</div>				<div class="messageTime">22:03</div>			</div>			<div class="statContent">				<div class="statMessage">					I wanna punch someone because I had a shitty day				</div>			</div>		</div>'
+          );
+        }
+        else if (i==4){
+          $(".stats").append(
+            '<div class="singleStat sadness">			<div class="statTitle">				<div class="emotionStat">					<span class="material-icons">						north_east					</span>					<div class="emotionName">anger</div>				</div>				<div class="userName">matthater</div>				<div class="messageTime">22:03</div>			</div>			<div class="statContent">				<div class="statMessage">					I wanna punch someone because I had a shitty day				</div>			</div>		</div>'
+          );
+        }
+
+   
+       
         var emotionText = emotions[i];
         const d = new Date(message.timestamp);
         var date = ((d.getHours()<10?'0':'') + d.getHours()) + ":" + ((d.getMinutes()<10?'0':'') + d.getMinutes());
@@ -301,15 +335,25 @@ window.onload = () => {
   });
 
   $('input[type="checkbox"]').click(function () {
-    $(".pointDiv").toggleClass("invisible");
+    //$(".pointDiv").toggleClass("invisible");
     $(".stats").toggleClass("invisible");
+    $(".app").toggleClass("hasMoved");
   });
 
   $("#resetButton").click(function () {
     rad = 30;
     app.updatePoints();
   });
-};
+
+  //for(let i=0; i<5; i++){
+    $(".emotionName").click(function(){
+      // this.css({"color":"red"});
+      alert("esh");
+    });
+  }
+ 
+  
+//};
 
 // document.querySelector('path').addEventListener('mouseover', () => {
 //   // window.setInterval(function () {
@@ -330,6 +374,26 @@ $(document).on("mouseenter", ".statTitle", function () {
     scrollTop: statsDiv[0].scrollHeight
   }, 1000);
 });
+
+$(document).on("mouseenter mouseleave", ".happiness", function () {
+$(".pointDiv:nth-child(1) .dot").toggleClass("dotPulse");
+});
+$(document).on("mouseenter mouseleave", ".fear", function () {
+  $(".pointDiv:nth-child(2) .dot").toggleClass("dotPulse");
+});
+
+$(document).on("mouseenter mouseleave", ".anger", function () {
+  $(".pointDiv:nth-child(3) .dot").toggleClass("dotPulse");
+});
+
+$(document).on("mouseenter mouseleave", ".love", function () {
+  $(".pointDiv:nth-child(4) .dot").toggleClass("dotPulse");
+});
+
+$(document).on("mouseenter mouseleave", ".sadness", function () {
+  $(".pointDiv:nth-child(5) .dot").toggleClass("dotPulse");
+});
+
 
 $(document).on("mouseleave", ".statTitle", function () {
   $(this).next().toggleClass("appearMsg");
