@@ -1,10 +1,6 @@
-const {
-  ipcRenderer
-} = require("electron");
+const { ipcRenderer } = require("electron");
 
-import {
-  spline
-} from "https://cdn.skypack.dev/@georgedoescode/spline@1.0.1";
+import { spline } from "https://cdn.skypack.dev/@georgedoescode/spline@1.0.1";
 import SimplexNoise from "https://cdn.skypack.dev/simplex-noise@2.4.0";
 
 const $ = require("jquery");
@@ -15,7 +11,7 @@ const root = document.documentElement;
 var noiseStep = 0.007;
 const center = {
   x: 100,
-  y: 100
+  y: 100,
 };
 // var point;
 // var rad = 30;
@@ -25,14 +21,310 @@ var smoothRadius = [...radiuses]; // spread operator
 var angleStep = (Math.PI * 2) / radiuses.length;
 
 const DATA = {
-  happiness: ["😛","🤪","🤗","🥳","🤩","😜","😌","😉","🙂","😊","😆","😁","😄","😃","😀","smile", "Smile", "dance","Dance", "sing","Sing", "glad","Glad","cheerful","Cheerful","joyful","Joyful","pleased","Pleased","content","Content","sunny","Sunny","upbeat","Upbeat","joy","Joy","happy","Happy","happiness","Happiness","euphoric","Euphoric","excited","Excited","festive","Festive","party","Party","good","Good",],
-  fear: ["😥","😧","😦","😵","🤐","😳","😨","🥶","fear","Fear","scared","Scared","afraid","Afraid","panic","Panic","doubt","Doubt","scare","Scare","fright","Fright","phobia","Phobia","shy","Shy","shiver","Shiver","scary","Scary","frightening","Frightening","terror","Terror","anxiety","Anxiety","anxious","Creep","creep","Terrified","terrified","Intimidated","intimidated"],
-  anger: ["😡","🤬","😠","🤯","🥵","😤","🙄","hate","Hate","rage","Rage", "angry","Angry", "kill","Kill", "fury","Fury","provocation","Provocation","bitter","Bitter","roar","Roar","furious","Furious","provoke","Provoke","flame","Flame","madness","Madness","shit","Shit","irriating","Irritating","annoying","Annoying","anger","Anger","furor","Furor","hell","Hell","mad","Mad","pissed","Pissed","tantrum","Tantrum","violent","Violent","blood","Blood","clench","Clench"],
-  love: ["💗","😍","🥰","😘","👩‍❤️‍👨","👩‍❤️‍👩","👨‍❤️‍👨","👩‍❤️‍💋‍👨","👩‍❤️‍💋‍👩","👨‍❤️‍💋‍👨","😻","❤️","🧡","💛","💚","💙","💜","❣️","💕","💞","💓","💗","💖","💘","💝","🖤","🤍","🤎","💟","🌹","🥀","🌷","kiss","Kiss", "love","Love", "smack","Smack", "flowers","Flowers","romance","Romance", "rose","Rose", "wedding","Wedding","cute","Cute","hug","Hug","appreciate","Appreciate","lust","Lust","crush","Crush","sweet","Sweet","lover","Lover","romantic","Romantic","dear","Dear","match","Match","fling","Fling","passion","Passion","passionate","Passionate","loved","Loved","in love","In love",],
-  sadness: ["😭","😢","😕","😔","😞","😒","😟","😖","😣","☹️","🙁","🥺","🥴","🤕","🤧","💔","tears","Tears", "cry","Cry", "unhappy","Unhappy","melancholy","Melancholy","sad","Sad","sadness","Sadness","depressed","Depressed","tragic","Tragic","pain","Pain","miss","Miss","heartbroken","Heartbroken","tearful","Tearful","remorse","Remorse","crying","Crying","breakdonw","Breakdown","depression","Depression","grief","Grief","mourn","Mourn","regret","Regret","heartache","Heartache","darkness","Darkness","distress","Distress","scar","Scar","hurt","Hurt","moody","Moddy","remorse","Remorse",],
-
-}
-
+  happiness: [
+    "😛",
+    "🤪",
+    "🤗",
+    "🥳",
+    "🤩",
+    "😜",
+    "😌",
+    "😉",
+    "🙂",
+    "😊",
+    "😆",
+    "😁",
+    "😄",
+    "😃",
+    "😀",
+    "smile",
+    "Smile",
+    "dance",
+    "Dance",
+    "sing",
+    "Sing",
+    "glad",
+    "Glad",
+    "cheerful",
+    "Cheerful",
+    "joyful",
+    "Joyful",
+    "pleased",
+    "Pleased",
+    "content",
+    "Content",
+    "sunny",
+    "Sunny",
+    "upbeat",
+    "Upbeat",
+    "joy",
+    "Joy",
+    "happy",
+    "Happy",
+    "happiness",
+    "Happiness",
+    "euphoric",
+    "Euphoric",
+    "excited",
+    "Excited",
+    "festive",
+    "Festive",
+    "party",
+    "Party",
+    "good",
+    "Good",
+  ],
+  fear: [
+    "😥",
+    "😧",
+    "😦",
+    "😵",
+    "🤐",
+    "😳",
+    "😨",
+    "🥶",
+    "fear",
+    "Fear",
+    "scared",
+    "Scared",
+    "afraid",
+    "Afraid",
+    "panic",
+    "Panic",
+    "doubt",
+    "Doubt",
+    "scare",
+    "Scare",
+    "fright",
+    "Fright",
+    "phobia",
+    "Phobia",
+    "shy",
+    "Shy",
+    "shiver",
+    "Shiver",
+    "scary",
+    "Scary",
+    "frightening",
+    "Frightening",
+    "terror",
+    "Terror",
+    "anxiety",
+    "Anxiety",
+    "anxious",
+    "Creep",
+    "creep",
+    "Terrified",
+    "terrified",
+    "Intimidated",
+    "intimidated",
+  ],
+  anger: [
+    "😡",
+    "🤬",
+    "😠",
+    "🤯",
+    "🥵",
+    "😤",
+    "🙄",
+    "hate",
+    "Hate",
+    "rage",
+    "Rage",
+    "angry",
+    "Angry",
+    "kill",
+    "Kill",
+    "fury",
+    "Fury",
+    "provocation",
+    "Provocation",
+    "bitter",
+    "Bitter",
+    "roar",
+    "Roar",
+    "furious",
+    "Furious",
+    "provoke",
+    "Provoke",
+    "flame",
+    "Flame",
+    "madness",
+    "Madness",
+    "shit",
+    "Shit",
+    "irriating",
+    "Irritating",
+    "annoying",
+    "Annoying",
+    "anger",
+    "Anger",
+    "furor",
+    "Furor",
+    "hell",
+    "Hell",
+    "mad",
+    "Mad",
+    "pissed",
+    "Pissed",
+    "tantrum",
+    "Tantrum",
+    "violent",
+    "Violent",
+    "blood",
+    "Blood",
+    "clench",
+    "Clench",
+  ],
+  love: [
+    "💗",
+    "😍",
+    "🥰",
+    "😘",
+    "👩‍❤️‍👨",
+    "👩‍❤️‍👩",
+    "👨‍❤️‍👨",
+    "👩‍❤️‍💋‍👨",
+    "👩‍❤️‍💋‍👩",
+    "👨‍❤️‍💋‍👨",
+    "😻",
+    "❤️",
+    "🧡",
+    "💛",
+    "💚",
+    "💙",
+    "💜",
+    "❣️",
+    "💕",
+    "💞",
+    "💓",
+    "💗",
+    "💖",
+    "💘",
+    "💝",
+    "🖤",
+    "🤍",
+    "🤎",
+    "💟",
+    "🌹",
+    "🥀",
+    "🌷",
+    "kiss",
+    "Kiss",
+    "love",
+    "Love",
+    "smack",
+    "Smack",
+    "flowers",
+    "Flowers",
+    "romance",
+    "Romance",
+    "rose",
+    "Rose",
+    "wedding",
+    "Wedding",
+    "cute",
+    "Cute",
+    "hug",
+    "Hug",
+    "appreciate",
+    "Appreciate",
+    "lust",
+    "Lust",
+    "crush",
+    "Crush",
+    "sweet",
+    "Sweet",
+    "lover",
+    "Lover",
+    "romantic",
+    "Romantic",
+    "dear",
+    "Dear",
+    "match",
+    "Match",
+    "fling",
+    "Fling",
+    "passion",
+    "Passion",
+    "passionate",
+    "Passionate",
+    "loved",
+    "Loved",
+    "in love",
+    "In love",
+  ],
+  sadness: [
+    "😭",
+    "😢",
+    "😕",
+    "😔",
+    "😞",
+    "😒",
+    "😟",
+    "😖",
+    "😣",
+    "☹️",
+    "🙁",
+    "🥺",
+    "🥴",
+    "🤕",
+    "🤧",
+    "💔",
+    "tears",
+    "Tears",
+    "cry",
+    "Cry",
+    "unhappy",
+    "Unhappy",
+    "melancholy",
+    "Melancholy",
+    "sad",
+    "Sad",
+    "sadness",
+    "Sadness",
+    "depressed",
+    "Depressed",
+    "tragic",
+    "Tragic",
+    "pain",
+    "Pain",
+    "miss",
+    "Miss",
+    "heartbroken",
+    "Heartbroken",
+    "tearful",
+    "Tearful",
+    "remorse",
+    "Remorse",
+    "crying",
+    "Crying",
+    "breakdonw",
+    "Breakdown",
+    "depression",
+    "Depression",
+    "grief",
+    "Grief",
+    "mourn",
+    "Mourn",
+    "regret",
+    "Regret",
+    "heartache",
+    "Heartache",
+    "darkness",
+    "Darkness",
+    "distress",
+    "Distress",
+    "scar",
+    "Scar",
+    "hurt",
+    "Hurt",
+    "moody",
+    "Moddy",
+    "remorse",
+    "Remorse",
+  ],
+};
 
 //const robot = require("robotSjs");
 class App {
@@ -54,16 +346,14 @@ class App {
   }
 
   createPoints() {
-
     for (let i = 0; i < radiuses.length; i++) {
-
       const rad = radiuses[i];
       const theta = i * angleStep;
       const radOffset = 30;
       var x = center.x + Math.cos(theta) * (rad + radOffset);
       var y = center.y + Math.sin(theta) * (rad + radOffset);
 
-      this.addLabels(x,y,i);
+      this.addLabels(x, y, i);
 
       x = center.x + Math.cos(theta) * rad;
       y = center.y + Math.sin(theta) * rad;
@@ -95,13 +385,14 @@ class App {
     return this.points;
   }
 
-  addLabels(x, y, i){
+  addLabels(x, y, i) {
     $(".emotionsDiv").append('<div class="pointDiv"></div>');
     $(".pointDiv")
       .last()
       .css({
         top: (y * window.innerHeight) / 200,
-        left: (x * window.innerHeight) / 200 +
+        left:
+          (x * window.innerHeight) / 200 +
           (window.innerWidth - window.innerHeight) / 2,
         position: "absolute",
       });
@@ -109,10 +400,9 @@ class App {
     $(".pointDiv").last().attr("index", i);
     $(".pointDiv").last().append('<div class="dot"></div>');
   }
-  
+
   updatePoints() {
     this.points.forEach((point, i) => {
-
       smoothRadius[i] = lerp(smoothRadius[i], radiuses[i], 0.1);
 
       const radius = smoothRadius[i];
@@ -159,26 +449,22 @@ class App {
 
     this.hueNoiseOffset += noiseStep / 6;
 
-    //requestAnimationFrame(() => this.animate());
+    requestAnimationFrame(() => this.animate());
   }
 
-  deflateBlob(){
-
+  deflateBlob() {
     var indexVariable = 0;
-    
 
-    for(let i=0; i<radiuses.length; i++){
+    for (let i = 0; i < radiuses.length; i++) {
       var targetRadius = 30;
       setInterval(function () {
-        if(radiuses[i] > targetRadius){
-          radiuses[i] = radiuses[i]-0.01;
+        if (radiuses[i] > targetRadius) {
+          radiuses[i] = radiuses[i] - 0.01;
         }
-    }, 30);
+      }, 30);
     }
 
-
     this.points.forEach((point, i) => {
-
       smoothRadius[i] = lerp(smoothRadius[i], radiuses[i], 0.1);
 
       const radius = smoothRadius[i];
@@ -198,12 +484,6 @@ class App {
     // ipcRenderer.on("messageEmbedDiscord", this.onMessageEmbed.bind(this));
   }
 
-
-
-
-
-
-
   analyseMessage(msg) {
     console.log(msg);
     const results = Object.entries(DATA).map(([emotion, words]) => {
@@ -212,8 +492,7 @@ class App {
         return count;
       }, 0);
 
-
-      return [emotion, score]
+      return [emotion, score];
     });
 
     const scores = Object.fromEntries(results);
@@ -222,17 +501,16 @@ class App {
   }
   onMessage(event, message) {
     this.deflateBlob();
-    if(this.firstMessage == false){
-      $('input[type="checkbox"]').prop( "checked", true );
+    if (
+      this.firstMessage == false &&
+      $('input[type="checkbox"]').prop("checked") == false
+    ) {
+      $('input[type="checkbox"]').prop("checked", true);
       $(".stats").toggleClass("invisible");
       $(".app").toggleClass("hasMoved");
       this.firstMessage = true;
     }
 
-   
-   
-
-    
     console.log(message);
     let analysedMessage = this.analyseMessage(message.content);
 
@@ -241,61 +519,58 @@ class App {
     let emotions = Object.keys(analysedMessage);
     console.log(emotions.length);
 
-
-
     for (let i = 0; i < emotions.length; i++) {
       if (analysedMessageIndexes[i] > 0) {
-
         const increment = 10;
-       
-       
+
         setTimeout(function () {
           radiuses[i] += increment;
-        }, 0+i*200);
+        }, 0 + i * 200);
 
         console.log(radiuses[i]);
         console.log(increment);
-       
+
         // i = 0 -> fear // i = 1 -> anger // i = 2 -> love...
-        if(i==0){
+        if (i == 0) {
           $(".stats").append(
             '<div class="singleStat happiness">			<div class="statTitle">				<div class="emotionStat">					<span class="material-icons">						north_east					</span>					<div class="emotionName">anger</div>				</div>				<div class="userName">matthater</div>				<div class="messageTime">22:03</div>			</div>			<div class="statContent">				<div class="statMessage">					I wanna punch someone because I had a shitty day				</div>			</div>		</div>'
           );
-        } else if (i==1){
+        } else if (i == 1) {
           $(".stats").append(
             '<div class="singleStat fear">			<div class="statTitle">				<div class="emotionStat">					<span class="material-icons">						north_east					</span>					<div class="emotionName">anger</div>				</div>				<div class="userName">matthater</div>				<div class="messageTime">22:03</div>			</div>			<div class="statContent">				<div class="statMessage">					I wanna punch someone because I had a shitty day				</div>			</div>		</div>'
           );
-        }
-        else if (i==2){
+        } else if (i == 2) {
           $(".stats").append(
             '<div class="singleStat anger">			<div class="statTitle">				<div class="emotionStat">					<span class="material-icons">						north_east					</span>					<div class="emotionName">anger</div>				</div>				<div class="userName">matthater</div>				<div class="messageTime">22:03</div>			</div>			<div class="statContent">				<div class="statMessage">					I wanna punch someone because I had a shitty day				</div>			</div>		</div>'
           );
-        }
-        else if (i==3){
+        } else if (i == 3) {
           $(".stats").append(
             '<div class="singleStat love">			<div class="statTitle">				<div class="emotionStat">					<span class="material-icons">						north_east					</span>					<div class="emotionName">anger</div>				</div>				<div class="userName">matthater</div>				<div class="messageTime">22:03</div>			</div>			<div class="statContent">				<div class="statMessage">					I wanna punch someone because I had a shitty day				</div>			</div>		</div>'
           );
-        }
-        else if (i==4){
+        } else if (i == 4) {
           $(".stats").append(
             '<div class="singleStat sadness">			<div class="statTitle">				<div class="emotionStat">					<span class="material-icons">						north_east					</span>					<div class="emotionName">anger</div>				</div>				<div class="userName">matthater</div>				<div class="messageTime">22:03</div>			</div>			<div class="statContent">				<div class="statMessage">					I wanna punch someone because I had a shitty day				</div>			</div>		</div>'
           );
         }
 
-   
-       
         var emotionText = emotions[i];
         const d = new Date(message.timestamp);
-        var date = ((d.getHours()<10?'0':'') + d.getHours()) + ":" + ((d.getMinutes()<10?'0':'') + d.getMinutes());
+        var date =
+          (d.getHours() < 10 ? "0" : "") +
+          d.getHours() +
+          ":" +
+          ((d.getMinutes() < 10 ? "0" : "") + d.getMinutes());
         $(".messageTime").last().text(date);
         $(".userName").last().text(message.author);
         $(".statMessage").last().text(message.content);
         $(".emotionName").last().text(emotionText);
         var statsDiv = $(".stats").last();
-        statsDiv.animate({
-          scrollTop: statsDiv[0].scrollHeight
-        }, 1000);
-
+        statsDiv.animate(
+          {
+            scrollTop: statsDiv[0].scrollHeight,
+          },
+          1000
+        );
       }
     }
 
@@ -303,12 +578,8 @@ class App {
       //si love has property kiss
 
       if (emotions[i].hasOwnProperty(message.content)) {
-
         // const increment = emotions[i][message.content];
         // radiuses[i] += increment;
-
-
-
       }
     }
   }
@@ -324,6 +595,60 @@ class App {
 
 window.onload = () => {
   var app = new App();
+
+
+var l, t;
+  var mouseX = window.innerWidth / 2,
+    mouseY = window.innerHeight / 2;
+
+  var circle = {
+    el: $("#circle"),
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2,
+    w: 20,
+    h: 20,
+    update: function () {
+      l = this.x - this.w / 2;
+      t = this.y - this.h / 2;
+      this.el.css({
+        transform: "translate3d(" + l + "px," + t + "px, 0)",
+      });
+    },
+  };
+
+  var circleDot = {
+    el: $("#circleDot"),
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2,
+    w: 5,
+    h: 5,
+    update: function () {
+      l = this.x - this.w / 2;
+      t = this.y - this.h / 2;
+      this.el.css({
+        transform: "translate3d(" + l + "px," + t + "px, 0)",
+      });
+    },
+  };
+
+  $(window).mousemove(function (e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  setInterval(move, 1000 / 60);
+  function move() {
+    circle.x = lerp(circle.x, mouseX, 0.1);
+    circle.y = lerp(circle.y, mouseY, 0.1);
+    circleDot.x = mouseX;
+    circleDot.y = mouseY;
+    circle.update();
+    circleDot.update();
+  }
+
+  function lerp(start, end, amt) {
+    return (1 - amt) * start + amt * end;
+  }
 
   $(".pointDiv").click(function () {
     // index = $(this).attr("index");
@@ -346,13 +671,12 @@ window.onload = () => {
   });
 
   //for(let i=0; i<5; i++){
-    $(".emotionName").click(function(){
-      // this.css({"color":"red"});
-      alert("esh");
-    });
-  }
- 
-  
+  $(".emotionName").click(function () {
+    // this.css({"color":"red"});
+    alert("esh");
+  });
+};
+
 //};
 
 // document.querySelector('path').addEventListener('mouseover', () => {
@@ -368,37 +692,46 @@ window.onload = () => {
 // });
 
 $(document).on("mouseenter", ".statTitle", function () {
+  var mouseX;
+  var mouseY;
+
   $(this).next().toggleClass("appearMsg");
   var statsDiv = $(".stats").last();
-  statsDiv.animate({
-    scrollTop: statsDiv[0].scrollHeight
-  }, 1000);
+  statsDiv.animate(
+    {
+      scrollTop: statsDiv[0].scrollHeight,
+    },
+    1000
+  );
 });
 
 $(document).on("mouseenter mouseleave", ".happiness", function () {
-$(".pointDiv:nth-child(1) .dot").toggleClass("dotPulse");
+  $(".pointDiv:nth-child(1) .dot").toggleClass("dotPulse");
+  $(".pointDiv:nth-child(1) .emotionTag").toggleClass("emotionTagJump");
 });
 $(document).on("mouseenter mouseleave", ".fear", function () {
   $(".pointDiv:nth-child(2) .dot").toggleClass("dotPulse");
+  $(".pointDiv:nth-child(2) .emotionTag").toggleClass("emotionTagJump");
 });
 
 $(document).on("mouseenter mouseleave", ".anger", function () {
   $(".pointDiv:nth-child(3) .dot").toggleClass("dotPulse");
+  $(".pointDiv:nth-child(3) .emotionTag").toggleClass("emotionTagJump");
 });
 
 $(document).on("mouseenter mouseleave", ".love", function () {
   $(".pointDiv:nth-child(4) .dot").toggleClass("dotPulse");
+  $(".pointDiv:nth-child(4) .emotionTag").toggleClass("emotionTagJump");
 });
 
 $(document).on("mouseenter mouseleave", ".sadness", function () {
   $(".pointDiv:nth-child(5) .dot").toggleClass("dotPulse");
+  $(".pointDiv:nth-child(5) .emotionTag").toggleClass("emotionTagJump");
 });
-
 
 $(document).on("mouseleave", ".statTitle", function () {
   $(this).next().toggleClass("appearMsg");
 });
-
 
 function lerp(start, stop, amt) {
   return amt * (stop - start) + start;

@@ -6,6 +6,7 @@
 }
 
 * {
+  cursor: none;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -36,6 +37,7 @@ body {
   height: 100vh;
  overflow: hidden;
   background-color: rgb(249, 249, 249);
+  /* background-color: rgb(255, 255, 255); */
 }
 
 .interface{
@@ -120,7 +122,7 @@ path {
 
 @keyframes avatar-pulse {
   0% {
-    box-shadow: 0 0 0 0 rgb(206, 206, 206);
+    box-shadow: 0 0 0 0 rgba(126, 126, 126, 0.414);
     
   }
   100%{
@@ -142,7 +144,12 @@ path {
   text-align: center;
   color: rgb(0, 0, 0);
   /* transform: translate(-200%,-100%); */
-  margin-top: -9vh;
+  margin-top: -10vh;
+  transition: all 0.3s ease-in-out;
+}
+
+.emotionTagJump {
+  margin-top: -11vh;
 }
 
 .pointDiv:hover{
@@ -169,7 +176,7 @@ textarea, input { outline: none; }
   align-items: center;
   position: absolute;
   border-radius: 100px;
-  background-color: #ffffff;
+  background-color: #ffffff00;
   border: solid 1px black;
   transition: 0.3s cubic-bezier(0.73, 0, 0.23, 1);
 }
@@ -187,7 +194,7 @@ textarea, input { outline: none; }
   transition: 0.3s cubic-bezier(0.73, 0, 0.23, 1);
 }
 .checkbox:checked::before {
-  background-color: #f2f4ff;
+  background-color: #f2f4ff00;
 }
 .checkbox:checked::after {
   left: 20px;
@@ -263,4 +270,24 @@ textarea, input { outline: none; }
   right:0.5vw;
   top:5vh;
   border-bottom:solid 1px black ;
+}
+
+
+
+#circle{
+  z-index: 1;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #000000;
+  position:fixed;
+  border-radius:50%;
+}
+
+#circleDot{
+  z-index: 1;
+  width: 5px;
+  height: 5px;
+ background-color: black;
+  position:fixed;
+  border-radius:50%;
 }

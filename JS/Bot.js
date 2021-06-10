@@ -1,13 +1,12 @@
 const { Client, MessageEmbed } = require("discord.js");
 const { Board, Led, Servo, Button } = require("johnny-five");
 
-const DATA = {
+const DATA2 = {
   happiness: ["😛","🤪","🤗","🥳","🤩","😜","😌","😉","🙂","😊","😆","😁","😄","😃","😀","smile", "Smile", "dance","Dance", "sing","Sing", "glad","Glad","cheerful","Cheerful","joyful","Joyful","pleased","Pleased","content","Content","sunny","Sunny","upbeat","Upbeat","joy","Joy","happy","Happy","happiness","Happiness","euphoric","Euphoric","excited","Excited","festive","Festive","party","Party","good","Good",],
   fear: ["😥","😧","😦","😵","🤐","😳","😨","🥶","fear","Fear","scared","Scared","afraid","Afraid","panic","Panic","doubt","Doubt","scare","Scare","fright","Fright","phobia","Phobia","shy","Shy","shiver","Shiver","scary","Scary","frightening","Frightening","terror","Terror","anxiety","Anxiety","anxious","Creep","creep","Terrified","terrified","Intimidated","intimidated"],
   anger: ["😡","🤬","😠","🤯","🥵","😤","🙄","hate","Hate","rage","Rage", "angry","Angry", "kill","Kill", "fury","Fury","provocation","Provocation","bitter","Bitter","roar","Roar","furious","Furious","provoke","Provoke","flame","Flame","madness","Madness","shit","Shit","irriating","Irritating","annoying","Annoying","anger","Anger","furor","Furor","hell","Hell","mad","Mad","pissed","Pissed","tantrum","Tantrum","violent","Violent","blood","Blood","clench","Clench"],
   love: ["💗","😍","🥰","😘","👩‍❤️‍👨","👩‍❤️‍👩","👨‍❤️‍👨","👩‍❤️‍💋‍👨","👩‍❤️‍💋‍👩","👨‍❤️‍💋‍👨","😻","❤️","🧡","💛","💚","💙","💜","❣️","💕","💞","💓","💗","💖","💘","💝","🖤","🤍","🤎","💟","🌹","🥀","🌷","kiss","Kiss", "love","Love", "smack","Smack", "flowers","Flowers","romance","Romance", "rose","Rose", "wedding","Wedding","cute","Cute","hug","Hug","appreciate","Appreciate","lust","Lust","crush","Crush","sweet","Sweet","lover","Lover","romantic","Romantic","dear","Dear","match","Match","fling","Fling","passion","Passion","passionate","Passionate","loved","Loved","in love","In love",],
   sadness: ["😭","😢","😕","😔","😞","😒","😟","😖","😣","☹️","🙁","🥺","🥴","🤕","🤧","💔","tears","Tears", "cry","Cry", "unhappy","Unhappy","melancholy","Melancholy","sad","Sad","sadness","Sadness","depressed","Depressed","tragic","Tragic","pain","Pain","miss","Miss","heartbroken","Heartbroken","tearful","Tearful","remorse","Remorse","crying","Crying","breakdonw","Breakdown","depression","Depression","grief","Grief","mourn","Mourn","regret","Regret","heartache","Heartache","darkness","Darkness","distress","Distress","scar","Scar","hurt","Hurt","moody","Moddy","remorse","Remorse",],
-
 }
 
 
@@ -28,12 +27,14 @@ class Bot {
     this.client.login(token);
     this.users = [];
 
-    //this.initArduino();
+    this.initArduino();
   }
 
   initArduino() {
     this.board = new Board({
       //port: "COM5",
+
+      //port: "/dev/cu.usbmodem144101",
       repl: false,
     });
     this.board.on("ready", this.onBoardReady.bind(this));
@@ -48,9 +49,6 @@ class Bot {
     //this.pump2.off();
   }
 
-  onButtonDown() {
-    console.log("button down");
-  }
 
   onReady() {
     console.log("BOT READY");
@@ -59,7 +57,7 @@ class Bot {
   onMessage(message) {
     var wordCounter = 0;
     const words = message.content.split(" ");
-    /*
+    
     for (let i = 0; i < words.length; i++) {
       for (var j = 0; j < Object.keys(DATA2).length; j++) {
         //console.log(Object.values(DATA2)[j]);
@@ -70,7 +68,6 @@ class Bot {
           wordCounter++;
           var timer = 0;
           var that = this;
-
          
           if (j == 0) { 
             //happy
@@ -94,22 +91,41 @@ class Bot {
           
           else if (j == 1) {
             //fear
-              that.pump1.pulse({
-                easing: "linear",
-                duration: 1000,
-                cuePoints: [0, 0.45, 0.5, 1],
-                keyFrames: [255, 255, 0, 0],
-                onstop() {}
-              });
+              // that.pump1.pulse({
+              //   easing: "linear",
+              //   duration: 1000,
+              //   cuePoints: [0, 0.3, 0.5, 1],
+              //   keyFrames: [255, 255, 0, 0],
+              //   onstop() {}
+              // });
+              // that.pump2.pulse({
+              //   easing: "linear",
+              //   duration: 1000,
+              //   cuePoints: [0, 0.5, 0.7, 1],
+              //   keyFrames: [0, 255, 0, 1],
+              //   onstop() {
+              //     that.pump2.off();
+              //   }
+              // });
+
               that.pump2.pulse({
                 easing: "linear",
                 duration: 1000,
-                cuePoints: [0, 0.5, 0.55, 1],
-                keyFrames: [0, 0, 255, 0],
+                cuePoints: [0, 0.3, 0.45, 0.5, 1],
+                keyFrames: [0, 255, 255,0, 0],
+                onstop() {}
+              });
+              that.pump1.pulse({
+                easing: "linear",
+                duration: 1000,
+                cuePoints: [0, 0.55, 0.6, 0.75, 1],
+                keyFrames: [0, 0, 255, 255, 0],
                 onstop() {
                   that.pump2.off();
                 }
               });
+
+
           } else if (j == 2) {
             //anger
             that.pump1.pulse({
@@ -124,8 +140,8 @@ class Bot {
             that.pump1.pulse({
               easing: "linear",
               duration: 1000,
-              cuePoints: [0, 0.20, 0.25, 0.45, 0.5, 1],
-              keyFrames: [255, 0, 0, 255, 0, 0],
+              cuePoints: [0, 0.18, 0.20, 0.25, 0.45, 0.5, 1],
+              keyFrames: [255,255, 0, 0, 255, 0, 0],
               onstop() {}
             });
           } else if (j == 4) {
@@ -149,42 +165,19 @@ class Bot {
             });
           }
           
-
           var that = this;
           setTimeout(function () {
             //clearInterval(rhytm);
             that.pump1.stop().off();
             that.pump2.stop().off();
-          }, wordCounter * 4000);
-        }
+          }, wordCounter * 6000);
 
-           
+
+        }  
       }
-
-       
     }
 
-     */
-   
-
-    // var wordCounter = 0;
-    // const words = message.content.split(" ");
-    // for(let i = 0; i < words.length; i++){
-    //   for (var j = 0; j < DATA.length; j++) {
-    //     if (words[i].includes(DATA[j])) {
-    //       wordCounter ++;
-    //       this.pump1.on();
-    //       var that = this;
-
-    //       setTimeout(function(){
-    //         that.pump1.off();
-    //         that.pump2.off();
-    //       }, wordCounter * 3000);
-    //     }
-    //   }
-    // }
-
-    /*
+    
 
     if (message.content == "unblow" || message.content == "Unblow"  ) {
       wordCounter++;
@@ -209,7 +202,7 @@ class Bot {
       
     }
 
-    */
+    
 
     var timestamp = message.createdTimestamp;
 

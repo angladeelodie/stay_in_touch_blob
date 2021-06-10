@@ -1,47 +1,56 @@
 <!DOCTYPE html>
 <html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>STAY IN TOUCH</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="JS/App.js" type="module"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
 
-<head>
-	<meta charset="UTF-8">
-	<title>STAY IN TOUCH</title>
-	<link rel="stylesheet" href="./style.css">
-	<script src="JS/App.js" type="module"></script>
-	<script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"></script>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet">
+  <body>
+    <div class="interface">
+      <h1>stay in touch</h1>
+      <input type="checkbox" class="checkbox" />
+      <!-- <span id="resetButton">reset</span> -->
+      <div class="stats invisible"></div>
+    </div>
 
-</head>
+    <div class="app">
+      <div class="emotionsDiv"></div>
 
-<body>
-	<div class="interface">
-		<h1>stay in touch</h1>
-		<input type="checkbox" class="checkbox">
-		<!-- <span id="resetButton">reset</span> -->
-		<div class="stats invisible">
-		</div>
-	</div>
+      <svg class="blobCount" viewBox="0 0 200 200">
+        <defs>
+          <linearGradient id="gradient" gradientTransform="rotate(90)">
+            <stop
+              id="gradientStop1"
+              offset="0%"
+              stop-color="var(--startColor)"
+            />
+            <stop
+              id="gradientStop2 "
+              offset="100%"
+              stop-color="var(--stopColor)"
+            />
+          </linearGradient>
+        </defs>
+        <path d="" fill="url('#gradient')"></path>
+      </svg>
+    </div>
+
+	<div id="circle"></div>
+	<div id="circleDot"></div>
+
+<script>
 	
-	<div class="app">
-		
-		<div class="emotionsDiv"></div>
-	
-		<svg class="blobCount" viewBox="0 0 200 200">
-			<defs>
-			  <linearGradient id="gradient" gradientTransform="rotate(90)">
-				<stop id="gradientStop1" offset="0%" stop-color="var(--startColor)" />
-				<stop id="gradientStop2 " offset="100%" stop-color="var(--stopColor)" />
-			  </linearGradient>
-			</defs>
-			<path d="" fill="url('#gradient')"></path>
-		  </svg>
-
-	</div>
-	
-
-	
-</body>
-
+</script>
+  </body>
 </html>
